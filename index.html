@@ -237,6 +237,135 @@ body.dark-mode .botao-tema .fa-moon { display: none; }
     70% { box-shadow: 0 0 0 15px rgba(37, 211, 102, 0); }
     100% { box-shadow: 0 0 0 0 rgba(37, 211, 102, 0); }
 }
+/* ESTILO DAS SKILLS */
+.skills-container {
+    text-align: left;
+    margin-top: 20px;
+    padding: 0 10px;
+}
+
+.skill-item {
+    margin-bottom: 15px;
+}
+
+.skill-info {
+    display: flex;
+    justify-content: space-between;
+    font-size: 14px;
+    margin-bottom: 5px;
+    font-weight: 600;
+}
+
+.skill-bar-bg {
+    background: rgba(0, 0, 0, 0.1);
+    height: 8px;
+    border-radius: 10px;
+    overflow: hidden;
+}
+
+body.dark-mode .skill-bar-bg {
+    background: rgba(255, 255, 255, 0.1);
+}
+
+.skill-bar-fill {
+    background: var(--cor-destaque);
+    height: 100%;
+    width: 0; /* Começa em 0 para a animação funcionar */
+    border-radius: 10px;
+    transition: width 1.5s cubic-bezier(0.1, 0.42, 0.41, 1);
+}
+/* ESTILO DO CARROSSEL */
+.carousel-container {
+    margin-top: 25px;
+    padding: 15px;
+    background: rgba(255, 255, 255, 0.1);
+    border-radius: 15px;
+    border: 1px solid rgba(255, 255, 255, 0.2);
+    position: relative;
+}
+
+.projeto-display {
+    min-height: 120px;
+    display: flex;
+    flex-direction: column;
+    justify-content: center;
+    transition: 0.3s;
+}
+
+.projeto-nome {
+    font-weight: 700;
+    color: var(--cor-destaque);
+    margin-bottom: 5px;
+}
+
+.projeto-desc {
+    font-size: 13px;
+    line-height: 1.4;
+    opacity: 0.8;
+}
+
+.carousel-controls {
+    display: flex;
+    justify-content: space-between;
+    align-items: center;
+    margin-top: 15px;
+}
+
+.seta-btn {
+    background: var(--cor-caixa);
+    border: none;
+    color: var(--cor-texto);
+    width: 30px;
+    height: 30px;
+    border-radius: 50%;
+    cursor: pointer;
+    box-shadow: 0 2px 5px rgba(0,0,0,0.1);
+    transition: 0.2s;
+}
+
+.seta-btn:hover {
+    background: var(--cor-destaque);
+    color: white;
+}
+
+.projeto-contador {
+    font-size: 12px;
+    font-weight: bold;
+    opacity: 0.6;
+}
+/* Esconde a lista por padrão e prepara a animação */
+#lista-skills {
+    max-height: 0;
+    overflow: hidden;
+    transition: max-height 0.5s ease-out, opacity 0.5s;
+    opacity: 0;
+    margin-top: 0;
+}
+
+/* Classe que o JS vai colocar para mostrar */
+#lista-skills.aberto {
+    max-height: 500px; /* Um valor alto o suficiente para caber as barras */
+    opacity: 1;
+    margin-top: 20px;
+}
+
+.btn-skills {
+    background: none;
+    border: 1px solid var(--cor-destaque);
+    color: var(--cor-destaque);
+    padding: 8px 15px;
+    border-radius: 20px;
+    cursor: pointer;
+    font-size: 13px;
+    font-weight: bold;
+    margin: 10px 0;
+    transition: 0.3s;
+}
+
+.btn-skills:hover {
+    background: var(--cor-destaque);
+    color: white;
+}
 </style>
 <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.5.1/css/all.min.css">
 
@@ -260,43 +389,121 @@ body.dark-mode .botao-tema .fa-moon { display: none; }
     <a href="#" style="color: #E4405F; font-size: 20px; transition: 0.3s;"><i class="fa-brands fa-instagram"></i></a>
     <a href="#" style="color: #0077B5; font-size: 20px; transition: 0.3s;"><i class="fa-brands fa-linkedin"></i></a>
 </div>
+<button class="btn-skills" onclick="toggleSkills()">
+    <i class="fa-solid fa-gears"></i> Minhas Habilidades
+</button>
+
+<div id="lista-skills" class="skills-container"></div>
+<div id="lista-skills" class="skills-container"></div>
+<div class="carousel-container">
+    <div id="projeto-atual" class="projeto-display">
+        </div>
+    <div class="carousel-controls">
+        <button class="seta-btn" onclick="projetoAnterior()"><i class="fa-solid fa-chevron-left"></i></button>
+        <span id="contador-projeto" class="projeto-contador">1 / 3</span>
+        <button class="seta-btn" onclick="proximoProjeto()"><i class="fa-solid fa-chevron-right"></i></button>
+    </div>
+</div>
            <button class="meu-botao" onclick="alert('botão bonito fucionando!')">
     <i class="fa-regular fa-eye" style="margin-right: 8px;"></i> Ver Detalhes
 </button>
         </div>
     </div>
-  <script>
-    // 1. Ao carregar a página, verifica se já existe uma preferência salva
-    const temaSalvo = localStorage.getItem('tema');
+  <script> // 1. DADOS DAS SKILLS (Faltava isso!)
+const skills = [
+    { nome: "Photoshop", nivel: "90%" },
+    { nome: "HTML/CSS", nivel: "75%" },
+    { nome: "ADS (Lógica)", nivel: "60%" }
+];
 
-    if (temaSalvo === 'dark') {
-        document.body.classList.add('dark-mode');
+// 2. DADOS DOS PROJETOS
+const meusProjetos = [
+    { nome: "Portfólio Glassmorphism", desc: "Este card interativo usando efeitos de vidro e modo dark." },
+    { nome: "Sistema de Cadastro", desc: "Estudo de lógica em ADS para manipulação de listas e objetos." },
+    { nome: "Landing Page Designer", desc: "Projeto focado em UI/UX para agência de design." }
+];
+
+let indiceAtual = 0;
+
+// 3. FUNÇÃO PARA CRIAR AS BARRINHAS (Faltava isso!)
+function renderizarSkills() {
+    const listaSkills = document.getElementById('lista-skills');
+    if(!listaSkills) return; // Segurança de código
+    
+    listaSkills.innerHTML = ""; // Limpa para não duplicar
+    skills.forEach(skill => {
+        const item = document.createElement('div');
+        item.className = 'skill-item';
+        item.innerHTML = `
+            <div class="skill-info">
+                <span>${skill.nome}</span>
+                <span>${skill.nivel}</span>
+            </div>
+            <div class="skill-bar-bg">
+                <div class="skill-bar-fill" style="width: ${skill.nivel}"></div>
+            </div>
+        `;
+        listaSkills.appendChild(item);
+    });
+}
+
+// 4. LÓGICA DO CARROSSEL
+function atualizarCarrossel() {
+    const display = document.getElementById('projeto-atual');
+    const contador = document.getElementById('contador-projeto');
+    const proj = meusProjetos[indiceAtual];
+
+    display.style.opacity = 0;
+    setTimeout(() => {
+        display.innerHTML = `
+            <div class="projeto-nome">${proj.nome}</div>
+            <div class="projeto-desc">${proj.desc}</div>
+        `;
+        display.style.opacity = 1;
+        contador.innerText = `${indiceAtual + 1} / ${meusProjetos.length}`;
+    }, 200);
+}
+
+function proximoProjeto() {
+    indiceAtual = (indiceAtual + 1) % meusProjetos.length;
+    atualizarCarrossel();
+}
+
+function projetoAnterior() {
+    indiceAtual = (indiceAtual - 1 + meusProjetos.length) % meusProjetos.length;
+    atualizarCarrossel();
+}
+
+// 5. BOTÃO DE ABRIR/FECHAR SKILLS
+function toggleSkills() {
+    const lista = document.getElementById('lista-skills');
+    const btn = document.querySelector('.btn-skills');
+    lista.classList.toggle('aberto');
+
+    if (lista.classList.contains('aberto')) {
+        btn.innerHTML = '<i class="fa-solid fa-chevron-up"></i> Fechar Habilidades';
+    } else {
+        btn.innerHTML = '<i class="fa-solid fa-gears"></i> Minhas Habilidades';
     }
+}
 
-    function toggleDarkMode() {
-        // 2. Alterna a classe no body
-        document.body.classList.toggle('dark-mode');
+// 6. INICIALIZAÇÃO E TEMA
+window.onload = () => {
+    renderizarSkills();
+    atualizarCarrossel();
+};
 
-        // 3. Salva a escolha do usuário na "gaveta" (localStorage)
-        if (document.body.classList.contains('dark-mode')) {
-            localStorage.setItem('tema', 'dark');
-        } else {
-            localStorage.setItem('tema', 'light');
-        }
-        
-        console.log("Preferência de tema atualizada!");
-    }
-    // Charm de Título Dinâmico
+const temaSalvo = localStorage.getItem('tema');
+if (temaSalvo === 'dark') { document.body.classList.add('dark-mode'); }
+
+function toggleDarkMode() {
+    document.body.classList.toggle('dark-mode');
+    localStorage.setItem('tema', document.body.classList.contains('dark-mode') ? 'dark' : 'light');
+}
+
 let tituloOriginal = document.title;
-
-window.onblur = () => {
-    document.title = "Volte para ver meu projeto! 😉";
-};
-
-window.onfocus = () => {
-    document.title = tituloOriginal;
-};
-</script>
+window.onblur = () => { document.title = "Volte para ver meu projeto! 😉"; };
+window.onfocus = () => { document.title = tituloOriginal; }; </script>
 <a href="https://wa.me/SEUNUMERO" target="_blank" class="btn-contato">
     <i class="fa-brands fa-whatsapp"></i>
     <span>Contrate-me</span>
