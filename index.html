@@ -24,14 +24,13 @@
         --cor-fundo: #c9c9c9;
         --cor-texto: #333333;
         --cor-caixa: #ffffff;
-        --cor-destaque: #007bff;
     }
+    
 
     body.dark-mode {
         --cor-fundo: #121212;
         --cor-texto: #e0e0e0;
         --cor-caixa: #1e1e1e;
-        --cor-destaque: #bb86fc;
     }
 
     body {
@@ -95,7 +94,7 @@
         --cor-fundo: #c9c9c9;
         --cor-texto: #333333;
         --cor-caixa: #ffffff;
-        --cor-destaque: #007bff;
+        
     }
 
     /* 2. Quando o botão liga o Dark Mode, as cores mudam aqui */
@@ -103,7 +102,6 @@
         --cor-fundo: #121212;
         --cor-texto: #e0e0e0;
         --cor-caixa: #1e1e1e;
-        --cor-destaque: #bb86fc;
     }
 
     /* 3. Agora aplicamos as variáveis nos elementos */
@@ -366,57 +364,162 @@ body.dark-mode .skill-bar-bg {
     background: var(--cor-destaque);
     color: white;
 }
+/* PAINEL DE CONFIGURAÇÕES (MODO DASHBOARD) */
+.config-panel {
+    background: rgba(0, 0, 0, 0.05); /* Um fundo bem sutil */
+    border-radius: 15px;
+    padding: 15px;
+    margin-bottom: 20px;
+    border: 1px solid rgba(255, 255, 255, 0.2);
+    transition: 0.3s;
+}
+
+body.dark-mode .config-panel {
+    background: rgba(255, 255, 255, 0.05);
+}
+
+.config-title {
+    font-size: 11px;
+    text-transform: uppercase;
+    letter-spacing: 1px;
+    font-weight: 700;
+    margin-bottom: 12px;
+    opacity: 0.7;
+}
+
+.config-row {
+    display: flex;
+    align-items: center;
+    justify-content: space-between;
+    gap: 10px;
+}
+
+/* Estilizando o Seletor de Cores (o "input type color" é feio por padrão, vamos dar um tapa nele) */
+#colorPicker {
+    -webkit-appearance: none;
+    -moz-appearance: none;
+    appearance: none;
+    width: 35px;
+    height: 35px;
+    background-color: transparent;
+    border: none;
+    cursor: pointer;
+}
+
+#colorPicker::-webkit-color-swatch {
+    border-radius: 50%;
+    border: 2px solid white;
+    box-shadow: 0 0 5px rgba(0,0,0,0.2);
+}
+
+.config-label {
+    font-size: 13px;
+    font-weight: 600;
+}
 </style>
+
+
+
+
+
+
 <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.5.1/css/all.min.css">
 
 <body>
-   <button onclick="toggleDarkMode()" id="btn-dark" class="botao-tema">
-    <i class="fa-solid fa-moon"></i>
-    <i class="fa-solid fa-sun"></i>
-</button>
+    <button onclick="toggleDarkMode()" id="btn-dark" class="botao-tema">
+        <i class="fa-solid fa-moon"></i>
+        <i class="fa-solid fa-sun"></i>
+    </button>
 
     <div class="card">
-        
         <img src="foto.png.png" alt="Meu Projeto" class="card-img">
 
         <div class="card-content">
             <h2 class="titulo-projeto">Projeto teste</h2>
-            <p style="color: #666; font-size: 15px; line-height: 1.6; margin-bottom: 20px;">
+            <p id="saudacao-texto" style="color: #666; font-size: 15px; line-height: 1.6; margin-bottom: 20px;">
                 Unindo <strong>Design</strong> e <strong>Programação</strong> para construir uma carreira internacional.
             </p>
-<div style="margin-bottom: 20px; display: flex; justify-content: center; gap: 15px;">
-    <a href="#" style="color: #333; font-size: 20px; transition: 0.3s;"><i class="fa-brands fa-github"></i></a>
-    <a href="#" style="color: #E4405F; font-size: 20px; transition: 0.3s;"><i class="fa-brands fa-instagram"></i></a>
-    <a href="#" style="color: #0077B5; font-size: 20px; transition: 0.3s;"><i class="fa-brands fa-linkedin"></i></a>
-</div>
-<button class="btn-skills" onclick="toggleSkills()">
-    <i class="fa-solid fa-gears"></i> Minhas Habilidades
-</button>
 
-<div id="lista-skills" class="skills-container"></div>
-<div id="lista-skills" class="skills-container"></div>
-<div class="carousel-container">
-    <div id="projeto-atual" class="projeto-display">
+            <div style="margin-bottom: 20px; display: flex; justify-content: center; gap: 15px;">
+                <a href="#" style="color: #333; font-size: 20px; transition: 0.3s;"><i class="fa-brands fa-github"></i></a>
+                <a href="#" style="color: #E4405F; font-size: 20px; transition: 0.3s;"><i class="fa-brands fa-instagram"></i></a>
+                <a href="#" style="color: #0077B5; font-size: 20px; transition: 0.3s;"><i class="fa-brands fa-linkedin"></i></a>
+            </div>
+
+            <div class="config-panel">
+                <div class="config-title">Personalização Dinâmica</div>
+                
+                <div class="config-row">
+                    <span class="config-label">Cor de Destaque</span>
+                    <input type="color" id="colorPicker" value="#007bff" oninput="mudarCor(this.value)">
+                </div>
+
+                <div class="config-row" style="margin-top: 15px; border-top: 1px solid rgba(255,255,255,0.1); padding-top: 10px;">
+                    <span class="config-label">Idioma / Language</span>
+                    <select id="idiomaSeletor" onchange="trocarIdioma(this.value)" style="background: var(--cor-caixa); color: var(--cor-texto); border-radius: 5px; border: 1px solid var(--cor-destaque); cursor: pointer;">
+                        <option value="pt">Português 🇧🇷</option>
+                        <option value="en">English 🇺🇸</option>
+                        <option value="de">Deutsch 🇩🇪</option>
+                    </select>
+                </div>
+            </div>
+
+            <button class="btn-skills" onclick="toggleSkills()">
+                <i class="fa-solid fa-gears"></i> Minhas Habilidades
+            </button>
+
+            <div id="lista-skills" class="skills-container"></div>
+
+            <div class="carousel-container">
+                <div id="projeto-atual" class="projeto-display"></div>
+                <div class="carousel-controls">
+                    <button class="seta-btn" onclick="projetoAnterior()"><i class="fa-solid fa-chevron-left"></i></button>
+                    <span id="contador-projeto" class="projeto-contador">1 / 3</span>
+                    <button class="seta-btn" onclick="proximoProjeto()"><i class="fa-solid fa-chevron-right"></i></button>
+                </div>
+            </div>
+
+            <button class="meu-botao" onclick="alert('botão bonito fucionando!')">
+                <i class="fa-regular fa-eye"></i> Ver Detalhes
+            </button>
         </div>
-    <div class="carousel-controls">
-        <button class="seta-btn" onclick="projetoAnterior()"><i class="fa-solid fa-chevron-left"></i></button>
-        <span id="contador-projeto" class="projeto-contador">1 / 3</span>
-        <button class="seta-btn" onclick="proximoProjeto()"><i class="fa-solid fa-chevron-right"></i></button>
     </div>
-</div>
-           <button class="meu-botao" onclick="alert('botão bonito fucionando!')">
-    <i class="fa-regular fa-eye" style="margin-right: 8px;"></i> Ver Detalhes
-</button>
-        </div>
-    </div>
-  <script> // 1. DADOS DAS SKILLS (Faltava isso!)
+
+<script>
+// --- 1. DADOS E TRADUÇÕES ---
 const skills = [
     { nome: "Photoshop", nivel: "90%" },
     { nome: "HTML/CSS", nivel: "75%" },
     { nome: "ADS (Lógica)", nivel: "60%" }
 ];
 
-// 2. DADOS DOS PROJETOS
+const traducoes = {
+    pt: {
+        saudacao: "Unindo <strong>Design</strong> e <strong>Programação</strong> para construir uma carreira internacional.",
+        btnSkills: '<i class="fa-solid fa-gears"></i> Minhas Habilidades',
+        btnFechar: '<i class="fa-solid fa-chevron-up"></i> Fechar Habilidades',
+        btnDetalhes: '<i class="fa-regular fa-eye"></i> Ver Detalhes',
+        configTitulo: "Personalização Dinâmica",
+        placeholderProjeto: "Projeto teste"
+    },
+    en: {
+        saudacao: "Merging <strong>Design</strong> and <strong>Coding</strong> to build an international career.",
+        btnSkills: '<i class="fa-solid fa-gears"></i> My Skills',
+        btnFechar: '<i class="fa-solid fa-chevron-up"></i> Close Skills',
+        btnDetalhes: '<i class="fa-regular fa-eye"></i> View Details',
+        configTitulo: "Dynamic Customization",
+        placeholderProjeto: "Test Project"
+    },
+    de: {
+        saudacao: "Verbindung von <strong>Design</strong> und <strong>Programmierung</strong> für eine internationale Karriere.",
+        btnSkills: '<i class="fa-solid fa-gears"></i> Meine Fähigkeiten',
+        btnFechar: '<i class="fa-solid fa-chevron-up"></i> Schließen',
+        btnDetalhes: '<i class="fa-regular fa-eye"></i> Details anzeigen',
+        configTitulo: "Dynamische Anpassung",
+        placeholderProjeto: "Testprojekt"
+    }
+};
+
 const meusProjetos = [
     { nome: "Portfólio Glassmorphism", desc: "Este card interativo usando efeitos de vidro e modo dark." },
     { nome: "Sistema de Cadastro", desc: "Estudo de lógica em ADS para manipulação de listas e objetos." },
@@ -425,89 +528,94 @@ const meusProjetos = [
 
 let indiceAtual = 0;
 
-// 3. FUNÇÃO PARA CRIAR AS BARRINHAS (Faltava isso!)
+// --- 2. LOGICA DE IDIOMA ---
+function trocarIdioma(lang) {
+    const t = traducoes[lang];
+    document.getElementById('saudacao-texto').innerHTML = t.saudacao;
+    document.querySelector('.btn-skills').innerHTML = t.btnSkills;
+    document.querySelector('.meu-botao').innerHTML = t.btnDetalhes;
+    document.querySelector('.config-title').innerText = t.configTitulo;
+    document.querySelector('.titulo-projeto').innerText = t.placeholderProjeto;
+    localStorage.setItem('idioma', lang);
+}
+
+// --- 3. HABILIDADES E CARROSSEL ---
 function renderizarSkills() {
     const listaSkills = document.getElementById('lista-skills');
-    if(!listaSkills) return; // Segurança de código
-    
-    listaSkills.innerHTML = ""; // Limpa para não duplicar
+    if (!listaSkills) return; 
+    listaSkills.innerHTML = ""; 
     skills.forEach(skill => {
         const item = document.createElement('div');
         item.className = 'skill-item';
         item.innerHTML = `
-            <div class="skill-info">
-                <span>${skill.nome}</span>
-                <span>${skill.nivel}</span>
-            </div>
-            <div class="skill-bar-bg">
-                <div class="skill-bar-fill" style="width: ${skill.nivel}"></div>
-            </div>
+            <div class="skill-info"><span>${skill.nome}</span><span>${skill.nivel}</span></div>
+            <div class="skill-bar-bg"><div class="skill-bar-fill" style="width: ${skill.nivel}"></div></div>
         `;
         listaSkills.appendChild(item);
     });
 }
 
-// 4. LÓGICA DO CARROSSEL
+function toggleSkills() {
+    const lista = document.getElementById('lista-skills');
+    const btn = document.querySelector('.btn-skills');
+    const lang = localStorage.getItem('idioma') || 'pt';
+    lista.classList.toggle('aberto');
+
+    if (lista.classList.contains('aberto')) {
+        btn.innerHTML = traducoes[lang].btnFechar;
+    } else {
+        btn.innerHTML = traducoes[lang].btnSkills;
+    }
+}
+
 function atualizarCarrossel() {
     const display = document.getElementById('projeto-atual');
     const contador = document.getElementById('contador-projeto');
     const proj = meusProjetos[indiceAtual];
-
     display.style.opacity = 0;
     setTimeout(() => {
-        display.innerHTML = `
-            <div class="projeto-nome">${proj.nome}</div>
-            <div class="projeto-desc">${proj.desc}</div>
-        `;
+        display.innerHTML = `<div class="projeto-nome">${proj.nome}</div><div class="projeto-desc">${proj.desc}</div>`;
         display.style.opacity = 1;
         contador.innerText = `${indiceAtual + 1} / ${meusProjetos.length}`;
     }, 200);
 }
 
-function proximoProjeto() {
-    indiceAtual = (indiceAtual + 1) % meusProjetos.length;
-    atualizarCarrossel();
+function proximoProjeto() { indiceAtual = (indiceAtual + 1) % meusProjetos.length; atualizarCarrossel(); }
+function projetoAnterior() { indiceAtual = (indiceAtual - 1 + meusProjetos.length) % meusProjetos.length; atualizarCarrossel(); }
+
+// --- 4. TEMA E CORES ---
+function mudarCor(novaCor) {
+    document.documentElement.style.setProperty('--cor-destaque', novaCor);
+    localStorage.setItem('corPersonalizada', novaCor);
 }
-
-function projetoAnterior() {
-    indiceAtual = (indiceAtual - 1 + meusProjetos.length) % meusProjetos.length;
-    atualizarCarrossel();
-}
-
-// 5. BOTÃO DE ABRIR/FECHAR SKILLS
-function toggleSkills() {
-    const lista = document.getElementById('lista-skills');
-    const btn = document.querySelector('.btn-skills');
-    lista.classList.toggle('aberto');
-
-    if (lista.classList.contains('aberto')) {
-        btn.innerHTML = '<i class="fa-solid fa-chevron-up"></i> Fechar Habilidades';
-    } else {
-        btn.innerHTML = '<i class="fa-solid fa-gears"></i> Minhas Habilidades';
-    }
-}
-
-// 6. INICIALIZAÇÃO E TEMA
-window.onload = () => {
-    renderizarSkills();
-    atualizarCarrossel();
-};
-
-const temaSalvo = localStorage.getItem('tema');
-if (temaSalvo === 'dark') { document.body.classList.add('dark-mode'); }
 
 function toggleDarkMode() {
     document.body.classList.toggle('dark-mode');
     localStorage.setItem('tema', document.body.classList.contains('dark-mode') ? 'dark' : 'light');
 }
 
-let tituloOriginal = document.title;
-window.onblur = () => { document.title = "Volte para ver meu projeto! 😉"; };
-window.onfocus = () => { document.title = tituloOriginal; }; </script>
+// --- 5. INICIALIZAÇÃO ---
+window.onload = () => {
+    const temaSalvo = localStorage.getItem('tema');
+    if (temaSalvo === 'dark') document.body.classList.add('dark-mode');
+
+    renderizarSkills();
+    atualizarCarrossel();
+
+    const langSalva = localStorage.getItem('idioma') || 'pt';
+    document.getElementById('idiomaSeletor').value = langSalva;
+    trocarIdioma(langSalva);
+
+    const corSalva = localStorage.getItem('corPersonalizada');
+    if (corSalva) {
+        document.documentElement.style.setProperty('--cor-destaque', corSalva);
+        if (document.getElementById('colorPicker')) document.getElementById('colorPicker').value = corSalva;
+    }
+};
+</script>
+
 <a href="https://wa.me/SEUNUMERO" target="_blank" class="btn-contato">
     <i class="fa-brands fa-whatsapp"></i>
     <span>Contrate-me</span>
 </a>
-
 </body>
-</html>
